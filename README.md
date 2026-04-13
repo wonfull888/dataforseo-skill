@@ -23,7 +23,7 @@ Then invoke it as:
 
 ## Configure
 
-Create `dataforseo/.env` from `dataforseo/.env.example` and fill in your credentials:
+An empty `dataforseo/.env` is included for convenience. Fill in your credentials:
 
 ```env
 DATAFORSEO_LOGIN=
@@ -70,9 +70,14 @@ seo_tool_20260413.csv
 ahrefs_com_20260413.csv
 ```
 
+## Docs
+
+- Chinese usage guide: `docs/usage.zh-CN.md`
+
 ## Repo Layout
 
 - `dataforseo/SKILL.md`: trigger description and usage instructions
 - `dataforseo/scripts/`: Python exporters
 - `dataforseo/references/`: endpoint notes and examples
+- `docs/usage.zh-CN.md`: Chinese usage guide
 - `dist/dataforseo.skill`: packaged release artifact
