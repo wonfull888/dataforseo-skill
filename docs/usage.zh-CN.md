@@ -31,11 +31,18 @@ DATAFORSEO_PASSWORD=your_password
 
 - 语言：英文 `en`
 - 地区：美国 `US`，对应 `location_code=2840`
+- 扩展深度：`4`
 
 传入一个或多个核心关键词：
 
 ```bash
 python3 scripts/related_keywords_live.py "seo tool" "rank tracker"
+```
+
+指定扩展深度：
+
+```bash
+python3 scripts/related_keywords_live.py "seo tool" --depth 2
 ```
 
 指定语言和地区：
@@ -79,6 +86,7 @@ python3 scripts/ranked_keywords_live.py "example.com" --language-code en --locat
 
 - `--language`：用语言名称指定语言
 - `--region`：用地区名称或数字代码指定地区
+- `--depth`：设置相关关键词扩展深度，默认 `4`
 
 ## 输出文件
 

@@ -19,6 +19,7 @@ API_BASE = "https://api.dataforseo.com/v3/dataforseo_labs/google"
 DEFAULT_LOCATION_CODE = 2840
 DEFAULT_LANGUAGE_CODE = "en"
 DEFAULT_LIMIT = 1000
+DEFAULT_DEPTH = 4
 
 LANGUAGE_ALIASES = {
     "en": "en",
@@ -64,7 +65,12 @@ REGION_ALIASES = {
 }
 
 
-def parse_args(description: str, input_label: str, include_locale_names: bool = False) -> argparse.Namespace:
+def parse_args(
+    description: str,
+    input_label: str,
+    include_locale_names: bool = False,
+    include_depth: bool = False,
+) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(input_label, nargs="+", help=f"One or more {input_label.replace('_', ' ')} values")
     parser.add_argument("--output-dir", help="Directory for generated CSV files")
@@ -74,6 +80,8 @@ def parse_args(description: str, input_label: str, include_locale_names: bool = 
     if include_locale_names:
         parser.add_argument("--region", help="Region name, country code, or DataForSEO location code")
         parser.add_argument("--language", help="Language name or language code")
+    if include_depth:
+        parser.add_argument("--depth", type=int, default=DEFAULT_DEPTH, help="Related keyword expansion depth")
     return parser.parse_args()
 
 

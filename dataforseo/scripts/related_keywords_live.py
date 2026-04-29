@@ -12,6 +12,7 @@ def main() -> None:
         description="Export DataForSEO related keywords into per-keyword CSV files",
         input_label="keywords",
         include_locale_names=True,
+        include_depth=True,
     )
     skill_root = Path(__file__).resolve().parent.parent
     load_env(skill_root)
@@ -27,6 +28,7 @@ def main() -> None:
                 "location_code": location_code,
                 "language_code": language_code,
                 "limit": args.limit,
+                "depth": args.depth,
             }],
         )
         items = extract_items(response)
