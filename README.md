@@ -1,83 +1,116 @@
 # DataForSEO Skill
 
-Use this skill when you need two fast SEO workflows from DataForSEO Labs:
-
-1. Expand one or more seed keywords with `related_keywords/live`
-2. Export one or more competitor domains' ranking keywords with `ranked_keywords/live`
-
-Each keyword or domain produces its own CSV. The default export path is the skill's `output/` directory. Related keyword expansion defaults to English and United States, and can be overridden with language and region options.
+A Claude skill for expanding keyword lists and exporting competitor ranking keywords via DataForSEO Labs API. Tell Claude what you need in plain language — the skill handles the API calls and delivers CSV files.
 
 ## Install
 
-Install the `dataforseo` skill folder into one of these locations:
+Copy the `dataforseo/` skill folder into the skills directory for your AI coding assistant:
 
-- Claude Code: `~/.claude/skills/dataforseo`
-- OpenCode: `~/.config/opencode/skills/dataforseo`
-- Codex: `~/.codex/skills/dataforseo`
+| Assistant | Path |
+|-----------|------|
+| Claude Code | `~/.claude/skills/dataforseo` |
+| OpenCode | `~/.config/opencode/skills/dataforseo` |
+| Codex | `~/.codex/skills/dataforseo` |
 
-Then invoke it as:
+## Configure
+
+Fill in your DataForSEO credentials in `dataforseo/.env`:
+
+```env
+DATAFORSEO_LOGIN=your_login
+DATAFORSEO_PASSWORD=your_password
+```
+
+Get credentials at [dataforseo.com](https://dataforseo.com).
+
+## Activate
+
+Load the skill in your session:
 
 ```text
 /dataforseo
 ```
 
-## Configure
+## What You Can Ask
 
-An empty `dataforseo/.env` is included for convenience. Fill in your credentials:
+Once the skill is active, describe your goal in natural language.
 
-```env
-DATAFORSEO_LOGIN=
-DATAFORSEO_PASSWORD=
-```
+### Expand a seed keyword
 
-## Use Cases
+> "用 dataforseo 帮我扩展 'seo tool' 这个关键词"
 
-Use this skill when you want to:
+> "Get related keywords for 'rank tracker' and 'backlink checker'"
 
-- turn a seed keyword into a CSV of related keywords
-- inspect which keywords competitor domains already rank for
-- run both workflows in the same request and get separate CSV exports
-- target a specific keyword market with language and region settings
+The skill calls `related_keywords/live`, collects all related terms, and saves a CSV named after the keyword with today's date.
 
-## Commands
+Defaults: English language, United States market, depth 4.
 
-Expand seed keywords:
+### Change language or market
 
-```bash
-python3 scripts/related_keywords_live.py "seo tool" "rank tracker"
-```
+> "扩展 'seo 工具' 关键词，目标市场是中国，语言中文"
 
-Expand keywords with language and region:
+> "Related keywords for 'référencement' in French, target market France"
 
-```bash
-python3 scripts/related_keywords_live.py "seo tool" --language english --region us
-```
+Supported named regions: `us`, `uk`, `ca`, `au`, `nz`, `sg`  
+Supported named languages: `english`, `german`, `french`, `spanish`, `japanese`, `chinese`
 
-Export competitor ranking keywords:
+### Export a competitor's ranking keywords
 
-```bash
-python3 scripts/ranked_keywords_live.py "ahrefs.com" "semrush.com"
-```
+> "导出 ahrefs.com 的排名关键词"
+
+> "Get ranking keywords for semrush.com and moz.com"
+
+The skill calls `ranked_keywords/live` and saves one CSV per domain.
+
+### Run both workflows together
+
+> "扩展 'seo tool' 关键词，同时导出 ahrefs.com 的排名词"
+
+The skill runs both exports in the same session and returns both CSV paths.
 
 ## Output
 
-Files are written to `dataforseo/output/` by default.
+CSV files are saved to `dataforseo/output/` by default.
 
-Examples:
+| Input | Output filename |
+|-------|----------------|
+| keyword: `seo tool` | `seo_tool_20260429.csv` |
+| domain: `ahrefs.com` | `ahrefs_com_20260429.csv` |
 
-```text
-seo_tool_20260413.csv
-ahrefs_com_20260413.csv
+Each CSV includes all useful fields from the API response, flattened — no post-processing needed.
+
+## Example Session
+
 ```
+User:  /dataforseo
 
-## Docs
+User:  帮我扩展这几个关键词：keyword research, rank tracking, backlink analysis
 
-- Chinese usage guide: `docs/usage.zh-CN.md`
+Claude: 好的，我将为这 3 个关键词调用 DataForSEO related_keywords/live...
+        输出文件：
+        - output/keyword_research_20260429.csv
+        - output/rank_tracking_20260429.csv
+        - output/backlink_analysis_20260429.csv
+
+User:  再帮我导出 ahrefs.com 和 semrush.com 的排名词
+
+Claude: 正在调用 ranked_keywords/live...
+        输出文件：
+        - output/ahrefs_com_20260429.csv
+        - output/semrush_com_20260429.csv
+```
 
 ## Repo Layout
 
-- `dataforseo/SKILL.md`: trigger description and usage instructions
-- `dataforseo/scripts/`: Python exporters
-- `dataforseo/references/`: endpoint notes and examples
-- `docs/usage.zh-CN.md`: Chinese usage guide
-- `dist/dataforseo.skill`: packaged release artifact
+```
+dataforseo/          ← skill folder (install this)
+  SKILL.md           ← skill trigger description
+  scripts/           ← API scripts called by the skill
+  references/        ← endpoint notes and field reference
+  output/            ← CSV exports land here
+  .env               ← credentials (fill in, never commit)
+docs/
+  usage.zh-CN.md     ← Chinese usage guide
+dist/
+  dataforseo.skill   ← packaged release artifact
+```
